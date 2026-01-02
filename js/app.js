@@ -1494,13 +1494,14 @@ function incrementGoCounter(player) {
     }
 }
 
-
 let player1;
 function syncUI() {
     rollBtn.disabled = !player1.canRoll;
     counterEarned.textContent = player1.goRewards < 0 ? 0 : player1.goRewards;
-    counterClaimed.textContent = player1.claimedRewards;
-
+    counterClaimed.textContent = player1.claimedRewards || 0;
+    claimBtn.disabled = !(player1.goRewards > player1.claimedRewards);
+    const badge = document.getElementById("card-badge");
+    badge.textContent = player1.cardCount();
 }
 async function startGame() {
     boardGroup = svg.append("g");
@@ -1511,10 +1512,10 @@ async function startGame() {
 
     if (saved) {
         player1 = Player.fromState(board, JSON.parse(saved));
-        syncUI();
     } else {
         player1 = new Player(board);
     }
+    syncUI();
 }
 
 startGame();
@@ -1522,6 +1523,7 @@ startGame();
 function resetGame(player) {
     player.currentPrompt = "You do not have a current prompt. Roll to continue.";
     player.goRewards = -1;
+    player.claimedRewards = 0;
     player.rerollCount = 4;
     player.hasDoubleChance = false;
     player.moveToDestination = false;
@@ -1543,9 +1545,9 @@ function resetGame(player) {
     player.updateCardDisplay();
     player.setPromptWindow();
 
-
     player.saveToLocal();
     rollBtn.disabled = false;
+    syncUI();
 }
 
 const rollBtn = document.getElementById("roll-btn");
@@ -1814,9 +1816,26 @@ function autoFlipCard(spaceType) {
 
 
                     if (spaceType === "community_chest" && board.chestCards?.length) {
-                        const card = board.chestCards[
-                            Math.floor(Math.random() * board.chestCards.length)
-                        ];
+                        const available = board.chestCards.filter(
+                            card => !player1.cards.some(c => c.id === card.id)
+                        );
+
+                        if (available.length === 0) {
+                            frontTitle.style.display = "block";
+
+                            typeTextStable(frontTitle, "You Hoarder!", 40, () => {
+                                typeTextStable(frontDesc, "Sorry, there are no more cards left! Play some of your cards....", 20, () => {
+                                    closeSpaceOverlay.style.display = "block";
+                                });
+                            });
+                            return null;
+                        }
+
+                        const card = available[Math.floor(Math.random() * available.length)];
+
+                        // const card = board.chestCards[
+                        //     Math.floor(Math.random() * board.chestCards.length)
+                        // ];
 
                         player1.saveCard(card);
                         pendingCardForCollection = cardInner;

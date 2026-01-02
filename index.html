@@ -14,6 +14,20 @@
     <div id="game-scale">
         <div id="board-wrapper">
             <svg id="board"></svg>
+            <div id="goCounter" class="goCounter">
+                <div>
+                    <p class="cursive">Go Rewards</p>
+                    <button id="go-reward-btn">
+                        <img src="assets/star.svg" alt="Use Reward"
+                            style="width:24px; height:24px; vertical-align:middle;">
+                        Claim
+                    </button>
+                </div>
+                <div>
+                    <p>Earned: <span id="goCounterEarned">0</span></p>
+                    <p>Claimed: <span id="goCounterClaimed">0</span></p>
+                </div>
+            </div>
             <div class="bottomControls">
                 <div class="buttons">
                     <button id="roll-btn">
@@ -42,20 +56,7 @@
                             style="width:24px; height:24px; vertical-align:middle;">
                     </button>
                 </div>
-                <div id="goCounter" class="goCounter">
-                    <div>
-                        <p class="cursive">Go Rewards</p>
-                        <button id="go-reward-btn">
-                            <img src="assets/star.svg" alt="Use Reward"
-                                style="width:24px; height:24px; vertical-align:middle;">
-                            Claim
-                        </button>
-                    </div>
-                    <div>
-                        <p>Earned: <span id="goCounterEarned">0</span></p>
-                        <p>Claimed: <span id="goCounterClaimed">0</span></p>
-                    </div>
-                </div>
+
             </div>
             <div id="cards-overlay" class="hidden">
                 <button id="close-btn" class="button">&times;</button>
@@ -154,7 +155,7 @@
                         <strong>Current:</strong>
                         <span id="current-prompt">"You do not have a current prompt. Roll to continue."</span>
                     </div>
-                    
+
                     <div class="complete-prompt">
                         <input type="text" id="book-title-input" placeholder="Enter Book Title">
                         <button id="complete-btn">Complete</button>
