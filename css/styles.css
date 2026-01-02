@@ -298,12 +298,12 @@ button:hover {
     background: #9e3f3e;
 }
 
-button:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabled, #reroll-roll:disabled {
+button:disabled, #go-reward-btn:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabled, #reroll-roll:disabled {
     background: #aaa;
     cursor: not-allowed;
 
 }
-#reroll-roll:disabled:hover {
+#reroll-roll:disabled:hover, #go-reward-btn:disabled:hover {
     background: #aaaaaa;
 }
 /* =======================
@@ -1174,15 +1174,83 @@ button:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabl
 #goCounter { 
     position: relative;
 }
-.goCounter { 
-    width: min(700px, 95vw);
-    margin: 0px auto 30px auto;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 2px 2px #9e3f3e;
-    font-size: 24px;
+
+.goCounter {
+    max-width: 420px;
+    margin: 12px auto;
+    padding: 14px 18px;
+
+    background: linear-gradient(135deg, #ffffff 0%, #f6f9ff 100%);
+    border-radius: 16px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Left & right groups */
+.goCounter > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Section titles */
+.goCounter p.cursive {
+    font-family: "Pacifico", cursive;
     text-align: center;
 }
+.goCounter p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #222;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-align: right;
+}
+
+/* Numbers emphasized */
+#goCounterEarned,
+#goCounterClaimed {
+    font-weight: 800;
+    font-size: 1.05rem;
+}
+
+/* Button styling */
+#go-reward-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 8px 12px;
+
+    background: #bd4a49;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+/* Button hover / active states */
+#go-reward-btn:hover {
+    background: #9e3f3e;
+}
+
+#go-reward-btn:active {
+    transform: translateY(0px);
+}
+
 .goParticle {
   position: absolute;
   width: 8px;
@@ -1322,10 +1390,6 @@ button:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabl
     margin: 5px;
 }
 
-/* =======================
-   GAME SCALING WRAPPER
-======================= */
-
 #game-scale {
     width: 100%;
     display: flex;
@@ -1334,12 +1398,10 @@ button:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabl
     align-items: flex-start;
 }
 
-/* Keep your original design size */
 #board-wrapper {
     transform-origin: top center;
 }
 
-/* Tablet & smaller screens */
 @media (max-width: 1024px) {
     #board-wrapper {
         transform: scale(0.9);
@@ -1366,5 +1428,5 @@ button:disabled, #complete-btn:disabled , #reject-btn:disabled, #play-btn:disabl
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: calc(0% - 150px);
+    bottom: calc(0% - 190px);
 }

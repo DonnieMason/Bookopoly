@@ -15,9 +15,6 @@
         <div id="board-wrapper">
             <svg id="board"></svg>
             <div class="bottomControls">
-                <div class="goCounter">
-                    <p>Go Rewards Earned: <span id="goCounter">0</span></p>
-                </div>
                 <div class="buttons">
                     <button id="roll-btn">
                         <img src="assets/RollIcon.svg" alt="Roll Dice"
@@ -44,6 +41,20 @@
                         <img src="assets/cogs.svg" alt="Settings"
                             style="width:24px; height:24px; vertical-align:middle;">
                     </button>
+                </div>
+                <div id="goCounter" class="goCounter">
+                    <div>
+                        <p class="cursive">Go Rewards</p>
+                        <button id="go-reward-btn">
+                            <img src="assets/star.svg" alt="Use Reward"
+                                style="width:24px; height:24px; vertical-align:middle;">
+                            Claim
+                        </button>
+                    </div>
+                    <div>
+                        <p>Earned: <span id="goCounterEarned">0</span></p>
+                        <p>Claimed: <span id="goCounterClaimed">0</span></p>
+                    </div>
                 </div>
             </div>
             <div id="cards-overlay" class="hidden">
@@ -143,13 +154,12 @@
                         <strong>Current:</strong>
                         <span id="current-prompt">"You do not have a current prompt. Roll to continue."</span>
                     </div>
-
+                    
                     <div class="complete-prompt">
                         <input type="text" id="book-title-input" placeholder="Enter Book Title">
                         <button id="complete-btn">Complete</button>
                         <button id="reject-btn">Reject</button>
                     </div>
-
                     <div class="prompt-history">
                         <h3>History</h3>
                         <div class="table-wrapper">

@@ -233,6 +233,7 @@ class Player {
     constructor(board, svgPath = "assets/ReaderToken.svg", startIndex = 0) {
         this.currentPrompt = "You do not have a current prompt. Roll to continue.";
         this.goRewards = -1;
+        this.claimedRewards = 0;
         this.rerollCount = 4;
         this.hasRerolled = false;
         this.hasDoubleChance = false;
@@ -319,6 +320,7 @@ class Player {
         player.cards = state.cards || [];
 
         player.goRewards = state.goRewards;
+        player.claimedRewards = state.claimedRewards || 0;
         player.hasDoubleChance = state.hasDoubleChance;
         player.moveToDestination = state.moveToDestination;
         player.animalToGo = state.animalToGo;
@@ -331,7 +333,6 @@ class Player {
         return player;
     }
     getState() {
-
         return {
             index: this.index,
             currentPrompt: this.currentPrompt,
@@ -343,6 +344,7 @@ class Player {
             history: this.history,
             cards: this.cards,
             goRewards: this.goRewards,
+            claimedRewards: this.claimedRewards,
             hasDoubleChance: this.hasDoubleChance,
             moveToDestination: this.moveToDestination,
             animalToGo: this.animalToGo,
@@ -757,9 +759,6 @@ class Player {
         return [...this.cards];
     }
 
-    // -----------------------
-    // SHOW/HIDE OVERLAY
-    // -----------------------
     showCards() {
         this.overlay.style.display = "flex";
         this.currentCardIndex = 0;
@@ -771,8 +770,8 @@ class Player {
         disableMainButtons(false, true);
     }
     updateCardTransforms() {
-        const radius = 220;     // distance from center (spread)
-        const angleStep = 35;   // degrees between cards
+        const radius = 220;     
+        const angleStep = 35;   
 
         const cards = [
             { el: this.leftCard, offset: -1 },
@@ -1419,6 +1418,38 @@ class Player {
     }
 }
 
+const counterContainer = document.getElementById("goCounter");
+const counterEarned = document.getElementById("goCounterEarned");
+const counterClaimed = document.getElementById("goCounterClaimed");
+const claimBtn = document.getElementById("go-reward-btn");
+let fireworksClaimInterval = null;
+
+function startClaimFireworks() {
+    const bannerRect = counterContainer.getBoundingClientRect();
+
+    fireworksClaimInterval = setInterval(() => {
+        const x = rand(bannerRect.left, bannerRect.right);
+        const y = rand(bannerRect.top, bannerRect.bottom);
+        createFirework(x, y);
+    }, 200);
+}
+
+function stopClaimFireworks() {
+    if (fireworksClaimInterval) {
+        clearInterval(fireworksClaimInterval);
+        fireworksClaimInterval = null;
+    }
+}
+
+claimBtn.onclick = () => {
+    startClaimFireworks();
+    player1.claimedRewards++;
+    player1.saveToLocal();
+    counterClaimed.textContent = player1.claimedRewards;
+    claimBtn.disabled = !(player1.goRewards > player1.claimedRewards);
+    setTimeout(() => stopClaimFireworks(), 2000);
+};
+
 function incrementGoCounter(player) {
     player.goRewards++;
     if (player.doubleGo) {
@@ -1426,12 +1457,12 @@ function incrementGoCounter(player) {
         player.doubleGo = false;
     }
 
-    const counterEl = document.getElementById("goCounter");
-    counterEl.textContent = player.goRewards;
-
+    counterEarned.textContent = player.goRewards;
+    claimBtn.disabled = !(player1.goRewards > player1.claimedRewards);
+    
     // const container = document.querySelector(".goCounter");
-    const container = counterEl;
-    const rect = counterEl.getBoundingClientRect();
+    const container = counterEarned;
+    const rect = counterEarned.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
     const centerX = rect.left + rect.width / 2 - containerRect.left;
@@ -1467,8 +1498,9 @@ function incrementGoCounter(player) {
 let player1;
 function syncUI() {
     rollBtn.disabled = !player1.canRoll;
-    const counterEl = document.getElementById("goCounter");
-    counterEl.textContent = player1.goRewards < 0 ? 0 : player1.goRewards;
+    counterEarned.textContent = player1.goRewards < 0 ? 0 : player1.goRewards;
+    counterClaimed.textContent = player1.claimedRewards;
+
 }
 async function startGame() {
     boardGroup = svg.append("g");
